@@ -1,94 +1,80 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package graficas;
 
 import Logic.Mapa;
 import java.awt.Color;
 import java.awt.Graphics;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 
-/**
- *
- * @author Ernesto
- */
 public class GraficaCircular extends javax.swing.JFrame {
-
-    /**
-     * Creates new form GraficaCircular
-     */
-    int vectorX[] = new int[80];
-    int vectorY[] = new int[80];
-    /*
-    public void generarBiomas(int[][] map, int[][] bio, int tH, int tV){
-        for(int i = 0; i < 15; i++){
-            int bioX = (int)(Math.random()*tH);
-            int bioY = (int)(Math.random()*tV);
-
-            bio[bioX][bioY] = 1;
-        }
-    }*/
-    /*
-    public void continuarEbrio(int[][] map, int posX, int posY){
-        if (radialContinentes.isSelected()){
-            int continuar = (int)(Math.random()*3);
-            if ( continuar == 2){
-                map[posX][posY]++;
-                ebrio(map, posX, posY);
-            }
-        }
-    }*/
-    /*
-    public void ebrio(int[][] map, int posX, int posY){
-        if (posX > 0 && posY > 0 && posX < 122 && posY < 66){
-            if (map[posX][posY] > map[posX-1][posY]){
-                map[posX-1][posY] = map[posX][posY] -1;
-                if ((int)(Math.random()*2+1) == 1 && posX > 2){
-                    map[posX-1][posY-1] = map[posX][posY] -1;
-                    map[posX-1][posY+1] = map[posX][posY] -1;
-                    map[posX-2][posY] = map[posX][posY] -1;
-                    continuarEbrio(map,posX-2,posY);
+    
+    public void pintar(Mapa map, Graphics g, int mapa[][]){
+        for (int x = 0; x < map.getSizeX(); x++) {
+            for (int y = 0; y < map.getSizeY(); y++) {
+                switch (mapa[x][y]) {
+                    case 0 ->
+                        g.setColor(new Color(35, 75, 249));
+                    case 1 ->
+                        g.setColor(new Color(0, 150, 201));
+                    case 2 ->
+                        g.setColor(new Color(0, 200, 143));
+                    case 3 ->
+                        g.setColor(new Color(255, 209, 0));
+                    case 4 ->
+                        g.setColor(new Color(255, 162, 0));
+                    case 5 ->
+                        g.setColor(new Color(169, 120, 20));
+                    case 6 ->
+                        g.setColor(new Color(169, 84, 8));
+                    default ->
+                        g.setColor(Color.red);        
                 }
-            }
-            if (map[posX][posY] > map[posX+1][posY]){
-                map[posX+1][posY] = map[posX][posY] -1;
-                if ((int)(Math.random()*2+1) == 1 && posX < 60){
-                    map[posX+1][posY-1] = map[posX][posY] -1;
-                    map[posX+1][posY+1] = map[posX][posY] -1;
-                    map[posX+2][posY] = map[posX][posY] -1;
-                    continuarEbrio(map,posX+2,posY);
+                g.fillRect(x * 10 + 20, y * 10 + 80, 10, 10);
+                if (radioBioma.isSelected()) {
+                    int biome[][] = map.generarBiomas();
+                    switch (biome[x][y]) {
+                        case 3 ->
+                            g.setColor(new Color(0, 120, 0, 150));
+                        case 2 ->
+                            g.setColor(new Color(50, 150, 50, 150));
+                        case 1 -> g.setColor(new Color(250, 250, 250, 150));
+                    }
                 }
-            }
-            if (map[posX][posY] > map[posX][posY-1]){
-                map[posX][posY-1] = map[posX][posY] -1;
-                if ((int)(Math.random()*2+1) == 1 && posY > 2){
-                    map[posX+1][posY-1] = map[posX][posY] -1;
-                    map[posX-1][posY-1] = map[posX][posY] -1;
-                    map[posX][posY-2] = map[posX][posY] -1;
-                    continuarEbrio(map,posX,posY-2);
+                if (radioRadiacion.isSelected()){
+                    int radiacion[][] = map.radiation();
+                        switch (radiacion[x][y]) {
+                        case 0 ->
+                            g.setColor(new Color(35, 75, 249, 160));
+                        case 1 ->
+                            g.setColor(new Color(0, 150, 201, 160));
+                        case 2 ->
+                            g.setColor(new Color(0, 200, 143, 160));
+                        case 3 ->
+                            g.setColor(new Color(255, 209, 0, 160));
+                        case 4 ->
+                            g.setColor(new Color(255, 162, 0, 160));
+                        case 5 ->
+                            g.setColor(new Color(169, 120, 20, 160));
+                        case 6 ->
+                            g.setColor(new Color(169, 84, 8, 160));
+                        default ->
+                            g.setColor(Color.red);
+                        }
                 }
-            }
-            if (map[posX][posY] > map[posX][posY+1]){
-                map[posX][posY+1] = map[posX][posY] -1;
-                if ((int)(Math.random()*2+1) == 1 && posY < 33){
-                    map[posX+1][posY+1] = map[posX][posY] -1;
-                    map[posX-1][posY+1] = map[posX][posY] -1;
-                    map[posX][posY+2] = map[posX][posY] -1;
-                    continuarEbrio(map,posX,posY+2);
-                }
+                g.fillRect(x * 10 + 20, y * 10 + 80, 10, 10);
+                g.setColor(new Color(120, 120, 120));
+                g.drawRect(x * 10 + 20, y * 10 + 80, 10, 10);
+                
             }
         }
     }
-       */
+    
     public GraficaCircular() {
         initComponents();
         this.setLocationRelativeTo(null);
     }
     
-    boolean bandera = false;
+    boolean banderaGen = false;
+    boolean banderaBiomas = false;
+    boolean banderaRadiacion = false;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -99,7 +85,8 @@ public class GraficaCircular extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        Background = new javax.swing.JPanel();
+        Titulo = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -110,11 +97,17 @@ public class GraficaCircular extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         radioBioma = new javax.swing.JRadioButton();
         butMostrar = new javax.swing.JButton();
+        radioRadiacion = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Mapa");
+        Background.setBackground(new java.awt.Color(51, 51, 51));
+        Background.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        Titulo.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
+        Titulo.setForeground(new java.awt.Color(255, 255, 255));
+        Titulo.setText("Mapa");
+        Background.add(Titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, -1, -1));
 
         jButton1.setText("Generar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -122,6 +115,7 @@ public class GraficaCircular extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        Background.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 800, -1, -1));
 
         jPanel1.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -168,29 +162,14 @@ public class GraficaCircular extends javax.swing.JFrame {
                     .addComponent(spi_2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(radialContinentes)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        Background.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 810, 181, 110));
 
         jPanel2.setBackground(new java.awt.Color(230, 230, 230));
 
         radioBioma.setText("Biomas");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(radioBioma)
-                .addContainerGap(81, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(radioBioma)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         butMostrar.setText("Mostrar");
         butMostrar.addActionListener(new java.awt.event.ActionListener() {
@@ -199,50 +178,68 @@ public class GraficaCircular extends javax.swing.JFrame {
             }
         });
 
+        radioRadiacion.setText("Radiacion");
+        radioRadiacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioRadiacionActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(radioBioma)
+                    .addComponent(butMostrar)
+                    .addComponent(radioRadiacion))
+                .addContainerGap(77, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(radioBioma)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, Short.MAX_VALUE)
+                .addComponent(radioRadiacion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(butMostrar)
+                .addContainerGap())
+        );
+
+        Background.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 810, -1, 110));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
-                .addComponent(butMostrar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(20, 20, 20))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(291, 291, 291)
-                .addComponent(jLabel1)
-                .addGap(0, 318, Short.MAX_VALUE))
+            .addComponent(Background, javax.swing.GroupLayout.DEFAULT_SIZE, 1263, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 368, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1)
-                        .addComponent(butMostrar)))
-                .addContainerGap())
+            .addComponent(Background, javax.swing.GroupLayout.DEFAULT_SIZE, 926, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        bandera = true;
+        banderaGen = true;
+        isCreated = false;
         repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void butMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butMostrarActionPerformed
-
+        repaint();
+        banderaBiomas = true;
     }//GEN-LAST:event_butMostrarActionPerformed
+
+    private void radioRadiacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRadiacionActionPerformed
+        repaint();
+        banderaRadiacion = true;
+    }//GEN-LAST:event_radioRadiacionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -281,136 +278,45 @@ public class GraficaCircular extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel Background;
+    private javax.swing.JLabel Titulo;
     private javax.swing.JButton butMostrar;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButton radialContinentes;
     private javax.swing.JRadioButton radioBioma;
+    private javax.swing.JRadioButton radioRadiacion;
     private javax.swing.JSpinner spi_1;
     private javax.swing.JSpinner spi_2;
     // End of variables declaration//GEN-END:variables
 
+    boolean isCreated = false;
+    Mapa map = new Mapa(124,70);
+    int mapa[][] = new int[500][500];
+    
+    @Override
     public void paint(Graphics g){
         super.paint(g);
-        if(bandera == true){
-            int bordesMapaX[] = {200,640,640,200};  //Valores de los vertices en X
-            int bordesMapaY[] = {60,60,400,400};    //Valores de los vertices en Y
-            /*int tH = 124;   //Tamaño horizontal del mapa
-            int tV = 70;    //Tamaño vertical del mapa
-            int mapa[][] = new int[tH][tV];     //Matriz que hace del mapa
-            int biomas[][] = new int[tH][tV];   //Matriz que esta dedicada al bioma
-            int catidadMontes   = (int)(spi_1.getValue());  //Variable dedicada a al cantidad de montes
-            int alturaMonte     = (int)(spi_2.getValue());  //Variable dedicada a la altura esperdad de los montes
-
-            for(int c = 0; c<catidadMontes;c++){
-                int mx = (int)(Math.random()*58+2);
-                int my = (int)(Math.random()*30+2);
-                int alturaMinima = 1;
-                if (radialContinentes.isSelected())
-                    {alturaMinima = 2;}
-                mapa[mx][my] = (int)(Math.random()*alturaMonte+alturaMinima+mapa[mx][my]);
-                if (radialContinentes.isSelected()){//Generar cadenas montaniosas
-                    int fT = (int)(Math.random()*4); //falla tectonica direccion
-                    int fAlto = (int)(Math.random()*6+2); //Altura por encima del centro
-                    int fBajo = (int)(Math.random()*6+2); //Altura por debajo del centro
-                    switch(fT){
-                        case 0 -> {
-                            //vertical
-                            for(int iAlto = 0; iAlto < fAlto; iAlto++){
-                                if (my+iAlto < tV){
-                                    mapa[mx][my+iAlto] = mapa[mx][my];
-                                }
-                            }
-                            for(int iBajo = 0; iBajo < fBajo; iBajo++){
-                                if (my-iBajo > 0){
-                                    mapa[mx][my-iBajo] = mapa[mx][my];
-                                }
-                            }
-                        }
-                        case 1 -> {
-                            //Horizontal
-                            for(int iAlto = 0; iAlto < fAlto; iAlto++){
-                                if (mx+iAlto < tH){
-                                    mapa[mx+iAlto][my] = mapa[mx][my];
-                                }
-                            }
-                            for(int iBajo = 0; iBajo < fBajo; iBajo++){
-                                if (mx-iBajo > 0){
-                                    mapa[mx-iBajo][my] = mapa[mx][my];
-                                }
-                            }
-                        }
-                        case 2 -> {
-                            for(int iAlto = 0; iAlto < fAlto; iAlto++){
-                                if (mx+iAlto < tH && my+iAlto < tV){
-                                    mapa[mx+iAlto][my+iAlto] = mapa[mx][my];
-                                }
-                            }
-                            for(int iBajo = 0; iBajo < fBajo; iBajo++){
-                                if (mx-iBajo > 0 && my-iBajo > 0){
-                                    mapa[mx-iBajo][my-iBajo] = mapa[mx][my];
-                                }
-                            }
-                        }
-                        default -> {
-                                for(int iAlto = 0; iAlto < fAlto; iAlto++){
-                                        if (mx+iAlto < tH && my+iAlto < tV){
-                                                mapa[mx+iAlto][my+iAlto] = mapa[mx][my];
-                                                }
-                                        }
-                                for(int iBajo = 0; iBajo < fBajo; iBajo++){
-                                        if (mx-iBajo > 0 && my-iBajo > 0){
-                                                mapa[mx-iBajo][my-iBajo] = mapa[mx][my];
-                                                }
-                                        }
-                        }
-                            
-                    }
-                }
-            }*/
-            Mapa map = new Mapa(124,70);
-            map.setQuantityMounts((int)(spi_1.getValue()));
-            map.setHeightMounts((int)(spi_2.getValue()));
-            map.setIsContinent(radialContinentes.isSelected());
-            int mapa[][] = map.generateMounts();
-            int biome[][] = new int[map.getSizeX()][map.getSizeY()];
+        
+        if(banderaGen == true){
             
-            g.setColor(new Color(0, 0, 0));
-            g.drawPolygon(bordesMapaX, bordesMapaY, 4);
-            //for(int c = 0; c<10;c++){
-                for(int x = 0; x < map.getSizeX(); x++){
-                    for(int y = 0; y < map.getSizeY(); y++){
-                        //ebrio(mapa, x, y);
-                        //biome[x][y] = 0;
-            //            if (c == 9){
-                            switch(mapa[x][y]){
-                                case 0 -> g.setColor(new Color(35, 75, 249));
-                                case 1 -> g.setColor(new Color(0, 150, 201));
-                                case 2 -> g.setColor(new Color(0, 200, 143));
-                                case 3 -> g.setColor(new Color(255, 209, 0));
-                                case 4 -> g.setColor(new Color(255, 162, 0));
-                                case 5 -> g.setColor(new Color(169, 120, 20));
-                                case 6 -> g.setColor(new Color(169, 84, 8));
-                                default -> g.setColor(Color.red);
-                            }
-                       // }
-                    /*if (radioBioma.isSelected()){
-                        generarBiomas(mapa,biome, map.getSizeX(), map.getSizeY());
-                            switch(biome[x][y]){
-                                case 1 -> g.setColor(new Color(0, 120, 0));
-                            }
-                        }*/
-                        g.fillRect(x*10+20, y*10+50, 10, 10);
-                        g.setColor(new Color(120, 120, 120));
-                        g.drawRect(x*10+20, y*10+50, 10, 10);
-                    }
-                    //map.setMapBiome(biome);
-                }
-            //}
+            if (isCreated == false){
+                map = new Mapa(124,70);
+                map.setQuantityMounts((int)(spi_1.getValue()));
+                map.setHeightMounts((int)(spi_2.getValue()));
+                map.setIsContinent(radialContinentes.isSelected());
+                int mapa[][] = map.generateMounts();
+                isCreated = true;
+                pintar(map, g, mapa);
+            }   
         }
+        
+        if ((banderaBiomas || banderaRadiacion) && isCreated){
+                int mapa[][] = map.getMap();
+                pintar(map, g, mapa);
+            }
     }
 }
