@@ -28,41 +28,41 @@ public class GraficaCircular extends javax.swing.JFrame {
                         g.setColor(Color.red);        
                 }
                 g.fillRect(x * 10 + 20, y * 10 + 80, 10, 10);
-                if (radioBioma.isSelected()) {
+                if (radioBioma.isSelected()){
                     int biome[][] = map.generarBiomas();
                     switch (biome[x][y]) {
                         case 3 ->
                             g.setColor(new Color(0, 120, 0, 150));
                         case 2 ->
                             g.setColor(new Color(50, 150, 50, 150));
-                        case 1 -> g.setColor(new Color(250, 250, 250, 150));
+                        case 1 -> 
+                            g.setColor(new Color(250, 250, 250, 150));
                     }
                 }
                 if (radioRadiacion.isSelected()){
                     int radiacion[][] = map.radiation();
                         switch (radiacion[x][y]) {
-                        case 0 ->
-                            g.setColor(new Color(35, 75, 249, 160));
-                        case 1 ->
-                            g.setColor(new Color(0, 150, 201, 160));
-                        case 2 ->
-                            g.setColor(new Color(0, 200, 143, 160));
-                        case 3 ->
-                            g.setColor(new Color(255, 209, 0, 160));
-                        case 4 ->
-                            g.setColor(new Color(255, 162, 0, 160));
-                        case 5 ->
-                            g.setColor(new Color(169, 120, 20, 160));
-                        case 6 ->
-                            g.setColor(new Color(169, 84, 8, 160));
-                        default ->
-                            g.setColor(Color.red);
+                            case 0 ->
+                                g.setColor(new Color(35, 75, 249, 160));
+                            case 1 ->
+                                g.setColor(new Color(0, 150, 201, 160));
+                            case 4 ->
+                                g.setColor(new Color(0, 200, 143, 160));
+                            case 5 ->
+                                g.setColor(new Color(255, 209, 0, 160));
+                            case 6 ->
+                                g.setColor(new Color(255, 162, 0, 160));
+                            case 7 ->
+                                g.setColor(new Color(169, 120, 20, 160));
+                            case 8 ->
+                                g.setColor(new Color(169, 84, 8, 160));
+                            default ->
+                                g.setColor(Color.red);
                         }
-                }
+                    }
                 g.fillRect(x * 10 + 20, y * 10 + 80, 10, 10);
                 g.setColor(new Color(120, 120, 120));
                 g.drawRect(x * 10 + 20, y * 10 + 80, 10, 10);
-                
             }
         }
     }
@@ -73,8 +73,7 @@ public class GraficaCircular extends javax.swing.JFrame {
     }
     
     boolean banderaGen = false;
-    boolean banderaBiomas = false;
-    boolean banderaRadiacion = false;
+    boolean activar = false;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -117,7 +116,7 @@ public class GraficaCircular extends javax.swing.JFrame {
         });
         Background.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 800, -1, -1));
 
-        jPanel1.setBackground(new java.awt.Color(230, 230, 230));
+        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
 
         jLabel2.setText("Montes:");
 
@@ -127,6 +126,7 @@ public class GraficaCircular extends javax.swing.JFrame {
 
         spi_2.setValue(5);
 
+        radialContinentes.setBackground(new java.awt.Color(102, 102, 102));
         radialContinentes.setText("Continentes");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -167,8 +167,9 @@ public class GraficaCircular extends javax.swing.JFrame {
 
         Background.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 810, 181, 110));
 
-        jPanel2.setBackground(new java.awt.Color(230, 230, 230));
+        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
 
+        radioBioma.setBackground(new java.awt.Color(102, 102, 102));
         radioBioma.setText("Biomas");
 
         butMostrar.setText("Mostrar");
@@ -178,6 +179,7 @@ public class GraficaCircular extends javax.swing.JFrame {
             }
         });
 
+        radioRadiacion.setBackground(new java.awt.Color(102, 102, 102));
         radioRadiacion.setText("Radiacion");
         radioRadiacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -233,12 +235,10 @@ public class GraficaCircular extends javax.swing.JFrame {
 
     private void butMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butMostrarActionPerformed
         repaint();
-        banderaBiomas = true;
+        activar = true;
     }//GEN-LAST:event_butMostrarActionPerformed
 
     private void radioRadiacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRadiacionActionPerformed
-        repaint();
-        banderaRadiacion = true;
     }//GEN-LAST:event_radioRadiacionActionPerformed
 
     /**
@@ -314,7 +314,7 @@ public class GraficaCircular extends javax.swing.JFrame {
             }   
         }
         
-        if ((banderaBiomas || banderaRadiacion) && isCreated){
+        if (activar && isCreated){
                 int mapa[][] = map.getMap();
                 pintar(map, g, mapa);
             }

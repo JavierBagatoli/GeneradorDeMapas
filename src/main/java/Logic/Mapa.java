@@ -12,7 +12,9 @@ public class Mapa {
     private int quantityMounts = 0;
     private int heightMounts = 0;
     private boolean isContinent = false;
-    private int rotPlanet = ((int)(Math.random()*40)-20);
+    private final int rotPlanet = ((int)(Math.random()*40)-20);
+    private final int sentidoRadicion = ((int)(Math.random()*4));
+    private final double anchoRadiacionDiagonal = (Math.random()/3);
 
     public int getSizeX() {
         return sizeX;
@@ -135,6 +137,7 @@ public class Mapa {
         }
         return mapBiome;
     }
+    
     //Radiacion planetaria
     public int[][] radiation(){
         boolean isEmpty = true;
@@ -149,33 +152,61 @@ public class Mapa {
             }
             }}
         if (isEmpty){
-            for (int x = 0; x < sizeX; x++){
-                for (int y = 0; y < sizeY; y++){
-                    int midOfPlanet = (int )(sizeY/2);
-                    int angulo = abs((int)  y - midOfPlanet-rotPlanet);
-                    if (angulo > 0 && angulo < (midOfPlanet*1)/9){
-                        mapRadiation[x][y] = 8;
-                    }else if((angulo > (midOfPlanet*1)/9) && (angulo <= (midOfPlanet*2)/9)){
-                        mapRadiation[x][y] = 7;
-                    }else if((angulo > (midOfPlanet*2)/9) && (angulo <= (midOfPlanet*3)/9)){
-                        mapRadiation[x][y] = 6;
-                    }else if((angulo > (midOfPlanet*3)/9) && (angulo <= (midOfPlanet*4)/9)){
-                        mapRadiation[x][y] = 5;
-                    }else if((angulo > (midOfPlanet*4)/9) && (angulo <= (midOfPlanet*5)/9)){
-                        mapRadiation[x][y] = 4;
-                    }else if((angulo > (midOfPlanet*5)/9) && (angulo <= (midOfPlanet*6)/9)){
-                        mapRadiation[x][y] = 3;
-                    }else if((angulo > (midOfPlanet*6)/9) && (angulo <= (midOfPlanet*7)/9)){
-                        mapRadiation[x][y] = 2;
-                    }else if((angulo > (midOfPlanet*7)/9) && (angulo <= (midOfPlanet*8)/9)){
-                        mapRadiation[x][y] = 1;
-                    }else{
-                        mapRadiation[x][y] = 0;
+            //Generacion en Horizontal de la radiacion
+            int midOfPlanet = 0;
+            if(sentidoRadicion == 0){
+                midOfPlanet = (int )(sizeY/2);
+                for (int x = 0; x < sizeX; x++){
+                    for (int y = 0; y < sizeY; y++){
+                        int angulo = abs((int)  y - midOfPlanet-rotPlanet);
+                        calcularRadiacion(x,y,angulo,midOfPlanet);
                     }
                 }
             }
-        }
+            
+            if(sentidoRadicion == 1){
+            midOfPlanet = (int)(sizeX/2);
+            for (int y = 0; y < sizeY; y++){
+                for (int x = 0; x < sizeX; x++){
+                    int angulo = abs((int)  x - midOfPlanet-rotPlanet); 
+                    calcularRadiacion(x,y,angulo,midOfPlanet);
+                }}}
+            
+            if(sentidoRadicion == 2){
+            for (int x = 0; x < sizeX; x++){
+                
+                for (int y = 0; y < sizeY; y++){
+                    midOfPlanet = (int)((sizeY/2));
+                    int angulo = abs((int) (x - midOfPlanet - (y*anchoRadiacionDiagonal) -rotPlanet)); 
+                    calcularRadiacion(x,y,angulo,midOfPlanet);
+                }}}
+            
+            if(sentidoRadicion == 3){
+            for (int x = 0; x < sizeX; x++){
+                
+                for (int y = 0; y < sizeY; y++){
+                    midOfPlanet = (int)((sizeY/2));
+                    int angulo = abs((int) (x - midOfPlanet + (y*anchoRadiacionDiagonal) -rotPlanet)); 
+                    calcularRadiacion(x,y,angulo,midOfPlanet);
+                }}}
+            
+            }
+            
         return mapRadiation;
+    }
+    
+    public void calcularRadiacion(int x, int y, int angulo, int midOfPlanet){
+        if (angulo >= 0 && angulo <= (midOfPlanet*1)/9){
+            mapRadiation[x][y] = 8;
+        }else if((angulo > (midOfPlanet*1)/9) && (angulo <= (midOfPlanet*3)/9)){
+            mapRadiation[x][y] = 7;
+        }else if((angulo > (midOfPlanet*3)/9) && (angulo <= (midOfPlanet*6)/9)){
+            mapRadiation[x][y] = 6;
+        }else if((angulo > (midOfPlanet*6)/9) && (angulo <= (midOfPlanet*9)/9)){
+            mapRadiation[x][y] = 5;
+        }else{
+            mapRadiation[x][y] = 4;
+        }
     }
     //Algoritmos de terraformacion
     public void continuarEbrio(int[][] map, int posX, int posY){
