@@ -1,6 +1,7 @@
 package graficas;
 
 import Logic.Mapa;
+import Persistance.Guardar;
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -9,55 +10,97 @@ public class GraficaCircular extends javax.swing.JFrame {
     public void pintar(Mapa map, Graphics g, int mapa[][]){
         for (int x = 0; x < map.getSizeX(); x++) {
             for (int y = 0; y < map.getSizeY(); y++) {
-                switch (mapa[x][y]) {
-                    case 0 ->
-                        g.setColor(new Color(35, 75, 249));
-                    case 1 ->
-                        g.setColor(new Color(0, 150, 201));
-                    case 2 ->
-                        g.setColor(new Color(0, 200, 143));
-                    case 3 ->
-                        g.setColor(new Color(255, 209, 0));
-                    case 4 ->
-                        g.setColor(new Color(255, 162, 0));
-                    case 5 ->
-                        g.setColor(new Color(169, 120, 20));
-                    case 6 ->
-                        g.setColor(new Color(169, 84, 8));
-                    default ->
-                        g.setColor(Color.red);        
+                if(jRadioColoresBrillantes.isSelected()){
+                    switch (mapa[x][y]) {
+                        case 0 ->
+                            g.setColor(new Color(35, 75, 249));
+                        case 1 ->
+                            g.setColor(new Color(0, 150, 201));
+                        case 2 ->
+                            g.setColor(new Color(0, 200, 143));
+                        case 3 ->
+                            g.setColor(new Color(255, 209, 0));
+                        case 4 ->
+                            g.setColor(new Color(255, 162, 0));
+                        case 5 ->
+                            g.setColor(new Color(169, 120, 20));
+                        case 6 ->
+                            g.setColor(new Color(169, 84, 8));
+                        default ->
+                            g.setColor(Color.red);        
+                    }
+                } else if (jRadioColoresGrises.isSelected()) {
+                    switch (mapa[x][y]) {
+                        case 0 ->
+                            g.setColor(new Color(80, 80, 80));
+                        case 1 ->
+                            g.setColor(new Color(160, 160, 160));
+                        case 2 ->
+                            g.setColor(new Color(140, 140, 140));
+                        case 3 ->
+                            g.setColor(new Color(120, 120, 120));
+                        case 4 ->
+                            g.setColor(new Color(100, 100, 100));
+                        case 5 ->
+                            g.setColor(new Color(80, 80, 80));
+                        case 6 ->
+                            g.setColor(new Color(60, 60, 60));
+                        default ->
+                            g.setColor(new Color(140, 60, 60));
+                    }
+                } else {
+                    switch (mapa[x][y]) {
+                        case 0 ->
+                            g.setColor(new Color(96, 140, 141));
+                        case 1 ->
+                            g.setColor(new Color(113, 161, 161));
+                        case 2 ->
+                            g.setColor(new Color(189, 188, 159));
+                        case 3 ->
+                            g.setColor(new Color(129, 128, 88));
+                        case 4 ->
+                            g.setColor(new Color(103, 108, 68));
+                        case 5 ->
+                            g.setColor(new Color(115, 84, 46));
+                        case 6 ->
+                            g.setColor(new Color(115, 64, 20));
+                        default ->
+                            g.setColor(new Color(115, 40, 12));
+                    }
                 }
                 g.fillRect(x * 10 + 20, y * 10 + 80, 10, 10);
                 if (radioBioma.isSelected()){
                     int biome[][] = map.generarBiomas();
                     switch (biome[x][y]) {
+                        case 4 ->
+                            g.setColor(new Color(0, 250, 0, 200));
                         case 3 ->
-                            g.setColor(new Color(0, 120, 0, 150));
+                            g.setColor(new Color(0, 120, 0, 200));
                         case 2 ->
-                            g.setColor(new Color(50, 150, 50, 150));
-                        case 1 -> 
-                            g.setColor(new Color(250, 250, 250, 150));
+                            g.setColor(new Color(50, 150, 50, 200));
+                        //case 1 -> 
+                        //    g.setColor(new Color(0, 0, 0, 0));
                     }
                 }
                 if (radioRadiacion.isSelected()){
                     int radiacion[][] = map.radiation();
                         switch (radiacion[x][y]) {
                             case 0 ->
-                                g.setColor(new Color(35, 75, 249, 160));
+                                g.setColor(new Color(35, 75, 249, 80));
                             case 1 ->
-                                g.setColor(new Color(0, 150, 201, 160));
+                                g.setColor(new Color(0, 150, 201, 80));
                             case 4 ->
-                                g.setColor(new Color(0, 200, 143, 160));
+                                g.setColor(new Color(0, 200, 143, 80));
                             case 5 ->
-                                g.setColor(new Color(255, 209, 0, 160));
+                                g.setColor(new Color(255, 209, 0, 80));
                             case 6 ->
-                                g.setColor(new Color(255, 162, 0, 160));
+                                g.setColor(new Color(255, 162, 0, 80));
                             case 7 ->
-                                g.setColor(new Color(169, 120, 20, 160));
+                                g.setColor(new Color(169, 120, 20, 80));
                             case 8 ->
-                                g.setColor(new Color(169, 84, 8, 160));
+                                g.setColor(new Color(169, 84, 8, 80));
                             default ->
-                                g.setColor(Color.red);
+                                g.setColor(new Color(200, 0, 0, 80));
                         }
                     }
                 g.fillRect(x * 10 + 20, y * 10 + 80, 10, 10);
@@ -69,12 +112,16 @@ public class GraficaCircular extends javax.swing.JFrame {
     
     public GraficaCircular() {
         initComponents();
+        BGBotonesColores.add(jRadioColoresGrises);
+        BGBotonesColores.add(jRadioColoresTradicional);
+        BGBotonesColores.add(jRadioColoresBrillantes);
         this.setLocationRelativeTo(null);
     }
     
     boolean banderaGen = false;
     boolean activar = false;
-
+    boolean isGuardar = false;
+    boolean isCargar = false;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -84,6 +131,7 @@ public class GraficaCircular extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        BGBotonesColores = new javax.swing.ButtonGroup();
         Background = new javax.swing.JPanel();
         Titulo = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -97,6 +145,12 @@ public class GraficaCircular extends javax.swing.JFrame {
         radioBioma = new javax.swing.JRadioButton();
         butMostrar = new javax.swing.JButton();
         radioRadiacion = new javax.swing.JRadioButton();
+        jPanel3 = new javax.swing.JPanel();
+        jRadioColoresGrises = new javax.swing.JRadioButton();
+        jRadioColoresTradicional = new javax.swing.JRadioButton();
+        jRadioColoresBrillantes = new javax.swing.JRadioButton();
+        jBCargar = new javax.swing.JButton();
+        jBGuardar1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -213,6 +267,65 @@ public class GraficaCircular extends javax.swing.JFrame {
 
         Background.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 810, -1, 110));
 
+        jPanel3.setBackground(new java.awt.Color(102, 102, 102));
+
+        jRadioColoresGrises.setBackground(new java.awt.Color(102, 102, 102));
+        jRadioColoresGrises.setText("Colores Grises");
+        jRadioColoresGrises.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        jRadioColoresTradicional.setBackground(new java.awt.Color(102, 102, 102));
+        jRadioColoresTradicional.setText("Colores Tradicional");
+
+        jRadioColoresBrillantes.setBackground(new java.awt.Color(102, 102, 102));
+        jRadioColoresBrillantes.setText("Colores Brillantes");
+        jRadioColoresBrillantes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioColoresBrillantesActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioColoresGrises)
+                    .addComponent(jRadioColoresTradicional)
+                    .addComponent(jRadioColoresBrillantes))
+                .addContainerGap(25, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jRadioColoresBrillantes)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jRadioColoresGrises)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jRadioColoresTradicional)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+
+        Background.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 810, 160, 110));
+
+        jBCargar.setText("Cargar");
+        jBCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCargarActionPerformed(evt);
+            }
+        });
+        Background.add(jBCargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 880, -1, -1));
+
+        jBGuardar1.setText("Guardar");
+        jBGuardar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBGuardar1ActionPerformed(evt);
+            }
+        });
+        Background.add(jBGuardar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 840, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -240,6 +353,20 @@ public class GraficaCircular extends javax.swing.JFrame {
 
     private void radioRadiacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRadiacionActionPerformed
     }//GEN-LAST:event_radioRadiacionActionPerformed
+
+    private void jRadioColoresBrillantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioColoresBrillantesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioColoresBrillantesActionPerformed
+
+    private void jBCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCargarActionPerformed
+        isCargar = true;
+        repaint();
+    }//GEN-LAST:event_jBCargarActionPerformed
+
+    private void jBGuardar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardar1ActionPerformed
+        
+        isGuardar = true;
+    }//GEN-LAST:event_jBGuardar1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -278,14 +405,21 @@ public class GraficaCircular extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup BGBotonesColores;
     private javax.swing.JPanel Background;
     private javax.swing.JLabel Titulo;
     private javax.swing.JButton butMostrar;
+    private javax.swing.JButton jBCargar;
+    private javax.swing.JButton jBGuardar1;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JRadioButton jRadioColoresBrillantes;
+    private javax.swing.JRadioButton jRadioColoresGrises;
+    private javax.swing.JRadioButton jRadioColoresTradicional;
     private javax.swing.JRadioButton radialContinentes;
     private javax.swing.JRadioButton radioBioma;
     private javax.swing.JRadioButton radioRadiacion;
@@ -300,7 +434,7 @@ public class GraficaCircular extends javax.swing.JFrame {
     @Override
     public void paint(Graphics g){
         super.paint(g);
-        
+                
         if(banderaGen == true){
             
             if (isCreated == false){
@@ -309,14 +443,30 @@ public class GraficaCircular extends javax.swing.JFrame {
                 map.setHeightMounts((int)(spi_2.getValue()));
                 map.setIsContinent(radialContinentes.isSelected());
                 int mapa[][] = map.generateMounts();
+                map.setMap(mapa);
                 isCreated = true;
                 pintar(map, g, mapa);
             }   
         }
         
-        if (activar && isCreated){
-                int mapa[][] = map.getMap();
-                pintar(map, g, mapa);
+        if(isCreated){
+            int mapaLoad[][] = map.getMap();
+            if (activar){
+                pintar(map, g, mapaLoad);
             }
+            if (isGuardar){
+                Guardar guardar = new Guardar();
+                guardar.arrayToFichero(mapaLoad);
+                isGuardar = false;
+            }
+        }
+        if(isCargar){
+                Guardar guardar = new Guardar();
+                int[][] mapLoad = guardar.lee();
+                pintar(map, g, mapLoad);
+                isCargar=false;
+            }
+        
+        Titulo.setText("Mapa de: " + map.getNombreMapa());
     }
 }

@@ -15,6 +15,7 @@ public class Mapa {
     private final int rotPlanet = ((int)(Math.random()*40)-20);
     private final int sentidoRadicion = ((int)(Math.random()*4));
     private final double anchoRadiacionDiagonal = (Math.random()/3);
+    private String nombreMapa;
 
     public int getSizeX() {
         return sizeX;
@@ -71,6 +72,25 @@ public class Mapa {
     public void setIsContinent(boolean isContinent) {
         this.isContinent = isContinent;
     }
+
+    public int[][] getMapRadiation() {
+        return mapRadiation;
+    }
+
+    public void setMapRadiation(int[][] mapRadiation) {
+        this.mapRadiation = mapRadiation;
+    }
+
+    public String getNombreMapa() {
+        return nombreMapa;
+    }
+
+    public void setNombreMapa(String nombreMapa) {
+        this.nombreMapa = nombreMapa;
+    }
+    
+    
+    
     //Algoritmo de Biomas
     public int[][] generarBiomas(){
         boolean isEmpty = true;
@@ -105,11 +125,15 @@ public class Mapa {
                 }
                 if(!isOk){i--;}
             }
-                for(int c = 0; c < 3; c++){
+            for(int c = 0; c < 3; c++){
                 for(int x = 0; x < sizeX; x++){
                     for(int y = 0; y < sizeY; y++){
                         switch (mapBiome[x][y]) {
                             case 3 -> {
+                                int proliferacionInusual = (int) (Math.random()*5);
+                                if (proliferacionInusual == 2){
+                                    mapBiome[x][y]++;
+                                }
                                 if (x > 0 && mapBiome[x-1][y]<1){
                                     mapBiome[x-1][y] = mapBiome[x][y]-1;}
                                 if (x < sizeX && mapBiome[x+1][y]<1){
@@ -158,7 +182,8 @@ public class Mapa {
                 midOfPlanet = (int )(sizeY/2);
                 for (int x = 0; x < sizeX; x++){
                     for (int y = 0; y < sizeY; y++){
-                        int angulo = abs((int)  y - midOfPlanet-rotPlanet);
+                        int ruido = (int) ((Math.random() * 10) - 5);
+                        int angulo = abs((int)  y - midOfPlanet-rotPlanet+ruido);
                         calcularRadiacion(x,y,angulo,midOfPlanet);
                     }
                 }
@@ -168,7 +193,8 @@ public class Mapa {
             midOfPlanet = (int)(sizeX/2);
             for (int y = 0; y < sizeY; y++){
                 for (int x = 0; x < sizeX; x++){
-                    int angulo = abs((int)  x - midOfPlanet-rotPlanet); 
+                    int ruido = (int) ((Math.random() * 10) - 5);
+                    int angulo = abs((int)  x - midOfPlanet-rotPlanet + ruido); 
                     calcularRadiacion(x,y,angulo,midOfPlanet);
                 }}}
             
@@ -177,7 +203,8 @@ public class Mapa {
                 
                 for (int y = 0; y < sizeY; y++){
                     midOfPlanet = (int)((sizeY/2));
-                    int angulo = abs((int) (x - midOfPlanet - (y*anchoRadiacionDiagonal) -rotPlanet)); 
+                    int ruido = (int) ((Math.random() * 10) - 5);
+                    int angulo = abs((int) (x - midOfPlanet - (y*anchoRadiacionDiagonal) -rotPlanet)+ruido); 
                     calcularRadiacion(x,y,angulo,midOfPlanet);
                 }}}
             
@@ -186,7 +213,8 @@ public class Mapa {
                 
                 for (int y = 0; y < sizeY; y++){
                     midOfPlanet = (int)((sizeY/2));
-                    int angulo = abs((int) (x - midOfPlanet + (y*anchoRadiacionDiagonal) -rotPlanet)); 
+                    int ruido = (int) ((Math.random() * 10) - 5);
+                    int angulo = abs((int) (x - midOfPlanet + (y*anchoRadiacionDiagonal) -rotPlanet)+ruido); 
                     calcularRadiacion(x,y,angulo,midOfPlanet);
                 }}}
             
@@ -195,7 +223,7 @@ public class Mapa {
         return mapRadiation;
     }
     
-    public void calcularRadiacion(int x, int y, int angulo, int midOfPlanet){
+    public void calcularRadiacion(int x, int y, int angulo, int midOfPlanet){ //Pinta o declara la radiacion que llega en un cradro
         if (angulo >= 0 && angulo <= (midOfPlanet*1)/9){
             mapRadiation[x][y] = 8;
         }else if((angulo > (midOfPlanet*1)/9) && (angulo <= (midOfPlanet*3)/9)){
@@ -356,10 +384,45 @@ public class Mapa {
         return map;
     }
     
+    public String genNombreMapa(){
+        String nombre = "";
+        int longitudNombre = (int) (Math.random()*6)+3;
+        for(int i = 0; i < longitudNombre; i++){
+            char letra = (char) ((int) (Math.random()*26)+65);
+            if (i > 0){
+                char lastChar = nombre.charAt(nombre.length()-1);
+                if(letra == 90){
+                    nombre = nombre + "' ";
+                }else if (lastChar != 65 && lastChar != 69  && lastChar != 73 
+                    && lastChar != 79 && lastChar != 85){
+                    int vocal = (int) (Math.random()*5)+1;
+                    letra = switch (vocal) {
+                        case 1 -> 65;
+                        case 2 -> 69;
+                        case 3 -> 73;
+                        case 4 -> 79;
+                        case 5 -> 85;
+                        default -> 89;
+                    
+                    };
+                    nombre = nombre +letra;
+                }else{
+                    nombre = nombre + letra;
+                }
+            }else{
+                nombre = nombre + letra;
+            }
+        }
+        nombre = nombre.toLowerCase();
+        nombre = nombre.replace(nombre.charAt(0), nombre.toUpperCase().charAt(0));
+        return nombre;
+    }
+    
     public Mapa() {
     }
 
     public Mapa(int sizeX, int sizeY) {
+        this.nombreMapa = genNombreMapa();
         this.sizeX = sizeX;
         this.sizeY = sizeY;
     }
