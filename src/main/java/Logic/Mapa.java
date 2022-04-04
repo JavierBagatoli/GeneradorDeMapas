@@ -1,7 +1,6 @@
 package Logic;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.cos;
 
 public class Mapa {
     private int sizeX = 124;
@@ -110,13 +109,11 @@ public class Mapa {
                 int bioY = (int)(Math.random()*sizeY);
                 boolean isOk = false;
                 
-                if(bioX-2 > 2 && bioX+2 < sizeX && bioY-2 >2 && bioY+2 < sizeY-2){
+                if(isZonaLocalDentroMargenes(bioX, bioY)){
                     for(int x = bioX-2; x < bioX+2; x++){
                         for(int y = bioY-2; y < bioY+2; y++){
                             if(map[x][y] > 1){
                                 isOk = true;
-                            }
-                            if(isOk){
                                 mapBiome[bioX][bioY] = 3;
                                 break;
                             }
@@ -154,7 +151,6 @@ public class Mapa {
                                     mapBiome[x][y+1] = mapBiome[x][y]-1;}
                                 }
                         }
-
                     }
                 }
             }
@@ -162,6 +158,9 @@ public class Mapa {
         return mapBiome;
     }
     
+    private boolean isZonaLocalDentroMargenes(int x, int y){
+        return x-2 > 2 && x+2 < sizeX && y-2 >2 && y+2 < sizeY-2;
+    }
     //Radiacion planetaria
     public int[][] radiation(){
         boolean isEmpty = true;
@@ -176,54 +175,49 @@ public class Mapa {
             }
             }}
         if (isEmpty){
-            //Generacion en Horizontal de la radiacion
-            int midOfPlanet = 0;
-            if(sentidoRadicion == 0){
-                midOfPlanet = (int )(sizeY/2);
-                for (int x = 0; x < sizeX; x++){
-                    for (int y = 0; y < sizeY; y++){
-                        int ruido = (int) ((Math.random() * 10) - 5);
-                        int angulo = abs((int)  y - midOfPlanet-rotPlanet+ruido);
-                        calcularRadiacion(x,y,angulo,midOfPlanet);
+            int midOfPlanet= (int)((sizeY/2));
+            switch (sentidoRadicion) {
+                case 1 -> { //Horizontal
+                    for (int x = 0; x < sizeX; x++){
+                        for (int y = 0; y < sizeY; y++){
+                            int ruido = (int) ((Math.random() * 10) - 5);
+                            int angulo = abs((int)  y - midOfPlanet-rotPlanet+ruido);
+                            setValorRadiacion(x,y,angulo,midOfPlanet);
+                        }
                     }
                 }
+                case 2 -> { //Diagonal izquierda superior a derecha inferior
+                    for (int x = 0; x < sizeX; x++){
+                        for (int y = 0; y < sizeY; y++){
+                            int ruido = (int) ((Math.random() * 10) - 5);
+                            int angulo = abs((int) (x - midOfPlanet - (y*anchoRadiacionDiagonal) -rotPlanet)+ruido); 
+                            setValorRadiacion(x,y,angulo,midOfPlanet);
+                        }}
+                }
+                case 3 -> { //Diagonal izquierda inferior a derecha superior
+                    for (int x = 0; x < sizeX; x++){
+                        for (int y = 0; y < sizeY; y++){
+                            int ruido = (int) ((Math.random() * 10) - 5);
+                            int angulo = abs((int) (x - midOfPlanet + (y*anchoRadiacionDiagonal) -rotPlanet)+ruido); 
+                            setValorRadiacion(x,y,angulo,midOfPlanet);
+                        }}
+                }
+                default -> {//vertical
+                        midOfPlanet = (int)(sizeX/2);
+                        for (int y = 0; y < sizeY; y++){
+                                for (int x = 0; x < sizeX; x++){
+                                        int ruido = (int) ((Math.random() * 10) - 5);
+                                        int angulo = abs((int)  x - midOfPlanet-rotPlanet + ruido);
+                                        setValorRadiacion(x,y,angulo,midOfPlanet);
+                                        }}
+                }
             }
-            
-            if(sentidoRadicion == 1){
-            midOfPlanet = (int)(sizeX/2);
-            for (int y = 0; y < sizeY; y++){
-                for (int x = 0; x < sizeX; x++){
-                    int ruido = (int) ((Math.random() * 10) - 5);
-                    int angulo = abs((int)  x - midOfPlanet-rotPlanet + ruido); 
-                    calcularRadiacion(x,y,angulo,midOfPlanet);
-                }}}
-            
-            if(sentidoRadicion == 2){
-            for (int x = 0; x < sizeX; x++){
-                
-                for (int y = 0; y < sizeY; y++){
-                    midOfPlanet = (int)((sizeY/2));
-                    int ruido = (int) ((Math.random() * 10) - 5);
-                    int angulo = abs((int) (x - midOfPlanet - (y*anchoRadiacionDiagonal) -rotPlanet)+ruido); 
-                    calcularRadiacion(x,y,angulo,midOfPlanet);
-                }}}
-            
-            if(sentidoRadicion == 3){
-            for (int x = 0; x < sizeX; x++){
-                
-                for (int y = 0; y < sizeY; y++){
-                    midOfPlanet = (int)((sizeY/2));
-                    int ruido = (int) ((Math.random() * 10) - 5);
-                    int angulo = abs((int) (x - midOfPlanet + (y*anchoRadiacionDiagonal) -rotPlanet)+ruido); 
-                    calcularRadiacion(x,y,angulo,midOfPlanet);
-                }}}
-            
             }
             
         return mapRadiation;
     }
     
-    public void calcularRadiacion(int x, int y, int angulo, int midOfPlanet){ //Pinta o declara la radiacion que llega en un cradro
+    public void setValorRadiacion(int x, int y, int angulo, int midOfPlanet){ //Pinta o declara la radiacion que llega en un cradro
         if (angulo >= 0 && angulo <= (midOfPlanet*1)/9){
             mapRadiation[x][y] = 8;
         }else if((angulo > (midOfPlanet*1)/9) && (angulo <= (midOfPlanet*3)/9)){
@@ -236,7 +230,64 @@ public class Mapa {
             mapRadiation[x][y] = 4;
         }
     }
+    
     //Algoritmos de terraformacion
+    public void ebrio(int[][] map, int posX, int posY) {
+        if (isDentroMapa(posX, posY)) {
+            Coordenadas parXY = new Coordenadas(posX, posY);
+            boolean isConstruible = (int) (Math.random() * 2 + 1) == 1;
+            if (map[posX][posY] > map[posX - 1][posY]) {
+                map[posX-1][posY] = map[posX][posY] -1;
+                if (isConstruible && posX >= 1) {
+                    setNivel(posX-1, posY-1, parXY);
+                    setNivel(posX-1, posY+1, parXY);
+                    if(posX > 1){
+                        map[posX - 2][posY] = map[posX][posY] - 1;
+                        continuarEbrio(map, posX - 2, posY);
+                    }
+                }
+            }
+            if (map[posX][posY] > map[posX + 1][posY]) {
+                map[posX + 1][posY] = map[posX][posY] - 1;
+                if (isConstruible && posX <= sizeX-1) {
+                    setNivel(posX+1, posY-1, parXY);
+                    setNivel(posX+1, posY+1, parXY);
+                    if(posX < sizeX-2){
+                        map[posX + 2][posY] = map[posX][posY] - 1;
+                        continuarEbrio(map, posX + 2, posY);
+                    }
+                }
+            }
+            if (map[posX][posY] > map[posX][posY - 1]) {
+                map[posX][posY - 1] = map[posX][posY] - 1;
+                if (isConstruible && posY >= 1) {
+                    setNivel(posX+1, posY-1, parXY);
+                    setNivel(posX-1, posY-1, parXY);
+                    if(posY > 1){
+                        map[posX][posY - 2] = map[posX][posY] - 1;
+                        continuarEbrio(map, posX, posY - 2);
+                    }
+                }
+            }
+            if (map[posX][posY] > map[posX][posY + 1]) {
+                map[posX][posY + 1] = map[posX][posY] - 1;
+                if (isConstruible && posY <= sizeY-1) {
+                    setNivel(posX+1, posY+1, parXY);
+                    setNivel(posX-1, posY+1, parXY);
+                    if(posY < sizeY-2){
+                        map[posX][posY + 2] = map[posX][posY] - 1;
+                        continuarEbrio(map, posX, posY + 2);}
+                }
+            }
+        }
+    }
+
+    private boolean isDentroMapa(int x, int y){
+        return x > 0 && y > 0 && x < sizeX-1 && y < sizeY-1;
+    }
+    private void setNivel(int xObjetivo, int yObjetivo, Coordenadas origen){
+        map[xObjetivo][yObjetivo] = map[origen.getX()][origen.getY()]-1;
+    }
     public void continuarEbrio(int[][] map, int posX, int posY){
         if (isContinent){
             int continuar = (int)(Math.random()*3);
@@ -247,58 +298,6 @@ public class Mapa {
         }
     }
     
-    public void ebrio(int[][] map, int posX, int posY) {
-        if (posX > 0 && posY > 0 && posX < sizeX-1 && posY < sizeY-1) {
-            if (map[posX][posY] > map[posX - 1][posY]) {
-                map[posX - 1][posY] = map[posX][posY] - 1;
-                if ((int) (Math.random() * 2 + 1) == 1 && posX > 0 || posX == 1) {
-                    map[posX - 1][posY - 1] = map[posX][posY] - 1;
-                    map[posX - 1][posY + 1] = map[posX][posY] - 1;
-                    map[posX - 1][posY] = map[posX][posY] - 1;
-                    if(posX > 1){
-                        map[posX - 2][posY] = map[posX][posY] - 1;
-                        continuarEbrio(map, posX - 2, posY);
-                    }
-                }
-            }
-            if (map[posX][posY] > map[posX + 1][posY]) {
-                map[posX + 1][posY] = map[posX][posY] - 1;
-                if ((int) (Math.random() * 2 + 1) == 1 && posX < sizeX-1 || posX == sizeX-1) {
-                    map[posX + 1][posY - 1] = map[posX][posY] - 1;
-                    map[posX + 1][posY + 1] = map[posX][posY] - 1;
-                    map[posX + 1][posY] = map[posX][posY] - 1;
-                    if(posX < sizeX-2){
-                        map[posX + 2][posY] = map[posX][posY] - 1;
-                        continuarEbrio(map, posX + 2, posY);
-                    }
-                }
-            }
-            if (map[posX][posY] > map[posX][posY - 1]) {
-                map[posX][posY - 1] = map[posX][posY] - 1;
-                if ((int) (Math.random() * 2 + 1) == 1 && posY > 0 || posY == 1) {
-                    map[posX + 1][posY - 1] = map[posX][posY] - 1;
-                    map[posX - 1][posY - 1] = map[posX][posY] - 1;
-                    map[posX][posY - 1] = map[posX][posY] - 1;
-                    if(posY > 1){
-                        map[posX][posY - 2] = map[posX][posY] - 1;
-                        continuarEbrio(map, posX, posY - 2);
-                    }
-                }
-            }
-            if (map[posX][posY] > map[posX][posY + 1]) {
-                map[posX][posY + 1] = map[posX][posY] - 1;
-                if ((int) (Math.random() * 2 + 1) == 1 && posY < sizeY-1 || posY == sizeY-1) {
-                    map[posX + 1][posY + 1] = map[posX][posY] - 1;
-                    map[posX - 1][posY + 1] = map[posX][posY] - 1;
-                    map[posX][posY + 1] = map[posX][posY] - 1;
-                    if(posY < sizeY-2){
-                        map[posX][posY + 2] = map[posX][posY] - 1;
-                        continuarEbrio(map, posX, posY + 2);}
-                }
-            }
-        }
-    }
-
     //Generar Mapa
     public int[][] generateMounts() {
         for (int c = 0; c < quantityMounts; c++) {
@@ -319,12 +318,12 @@ public class Mapa {
                     case 0 -> {
                         //vertical
                         for (int iAlto = 0; iAlto < fAlto; iAlto++) {
-                            if (my + iAlto < sizeY) {
+                            if (isDentroMapa(mx, my + iAlto)) {
                                 map[mx][my + iAlto] = map[mx][my];
                             }
                         }
                         for (int iBajo = 0; iBajo < fBajo; iBajo++) {
-                            if (my - iBajo > 0) {
+                            if (isDentroMapa(mx, my - iBajo)) {
                                 map[mx][my - iBajo] = map[mx][my];
                             }
                         }
@@ -332,24 +331,24 @@ public class Mapa {
                     case 1 -> {
                         //Horizontal
                         for (int iAlto = 0; iAlto < fAlto; iAlto++) {
-                            if (mx + iAlto < sizeX) {
+                            if (isDentroMapa(mx + iAlto,my)) {
                                 map[mx + iAlto][my] = map[mx][my];
                             }
                         }
                         for (int iBajo = 0; iBajo < fBajo; iBajo++) {
-                            if (mx - iBajo > 0) {
+                            if (isDentroMapa(mx - iBajo, my )) {
                                 map[mx - iBajo][my] = map[mx][my];
                             }
                         }
                     }
                     case 2 -> {
                         for (int iAlto = 0; iAlto < fAlto; iAlto++) {
-                            if (mx + iAlto < sizeX && my + iAlto < sizeY) {
+                            if (isDentroMapa(mx + iAlto, my + iAlto)){
                                 map[mx + iAlto][my + iAlto] = map[mx][my];
                             }
                         }
                         for (int iBajo = 0; iBajo < fBajo; iBajo++) {
-                            if (mx - iBajo > 0 && my - iBajo > 0) {
+                            if (isDentroMapa(mx - iBajo, my - iBajo)) {
                                 map[mx - iBajo][my - iBajo] = map[mx][my];
                             }
                         }
@@ -361,7 +360,7 @@ public class Mapa {
                             }
                         }
                         for (int iBajo = 0; iBajo < fBajo; iBajo++) {
-                            if (mx - iBajo > 0 && my - iBajo > 0) {
+                            if (isDentroMapa(mx - iBajo, my - iBajo)) {
                                 map[mx - iBajo][my - iBajo] = map[mx][my];
                             }
                         }
@@ -393,8 +392,7 @@ public class Mapa {
                 char lastChar = nombre.charAt(nombre.length()-1);
                 if(letra == 90){
                     nombre = nombre + "' ";
-                }else if (lastChar != 65 && lastChar != 69  && lastChar != 73 
-                    && lastChar != 79 && lastChar != 85){
+                }else if (isConsonante(lastChar)){
                     int vocal = (int) (Math.random()*5)+1;
                     letra = switch (vocal) {
                         case 1 -> 65;
@@ -417,7 +415,9 @@ public class Mapa {
         nombre = nombre.replace(nombre.charAt(0), nombre.toUpperCase().charAt(0));
         return nombre;
     }
-    
+    private boolean isConsonante(char character){
+        return character != 65 && character != 69  && character != 73 && character != 79 && character != 85;
+    }
     public Mapa() {
     }
 

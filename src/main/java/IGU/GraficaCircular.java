@@ -1,4 +1,4 @@
-package graficas;
+package IGU;
 
 import Logic.Mapa;
 import Persistance.Guardar;
